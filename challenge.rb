@@ -29,35 +29,37 @@ blockchain = [
 # 👇👇👇 Your code HERE 👇👇👇
 
 #create variable to represent the balance of each person
-ben_balance = 0
-brian_balance = 0
-evan_balance = 0
-anthony_balance = 0
+users = [
+  {"name" => "ben", "balance" => 0},
+  {"name" => "brian", "balance" => 0}
+]
 
-# create for loop to go through each transfer
 for transfer in blockchain
-  if transfer["from_user"] == "ben"
-    ben_balance = ben_balance - transfer["amount"]
-  elsif transfer["from_user"] == "brian"
-    brian_balance = brian_balance - transfer["amount"]
-  elsif transfer["from_user"] == "evan"
-    evan_balance = evan_balance - transfer["amount"]
-  elsif transfer["from_user"] == "anthony"
-    anthony_balance = anthony_balance - transfer["amount"]
-  end 
+  if users.any? { |hash| hash["name"] == transfer["from_user"] }
+    users.each do |hash|
+      if hash["name"] == transfer["from_user"]
+        hash["balance"] = hash["balance"] - transfer["amount"]
+        break
+      end
+    end
+  else
+    new_user = {"name" => transfer["from_user"], "balance" => 0 - transfer["amount"]}
+    users.push(new_user)
+  end
 
-  if transfer["to_user"] == "ben"
-    ben_balance = ben_balance + transfer["amount"]
-  elsif transfer["to_user"] == "brian"
-    brian_balance = brian_balance + transfer["amount"]
-  elsif transfer["to_user"] == "evan"
-    evan_balance = evan_balance + transfer["amount"]
-  elsif transfer["to_user"] == "anthony"
-    anthony_balance = anthony_balance + transfer["amount"]
-  end 
+  if users.any? { |hash| hash["name"] == transfer["to_user"] }
+    users.each do |hash|
+      if hash["name"] == transfer["to_user"]
+        hash["balance"] = hash["balance"] + transfer["amount"]
+        break
+      end
+    end
+  else
+    new_user = {"name" => transfer["to_user"], "balance" => 0 + transfer["amount"]}
+    users.push(new_user)
+  end
 end
+  
+users.delete_if { |hash| hash["name"] == nil }
 
-puts "Ben's KelloggCoin balance is #{ben_balance}"
-puts "Brian's KelloggCoin balance is #{brian_balance}"
-puts "Evan's KelloggCoin balance is #{evan_balance}"
-puts "Anthony's KelloggCoin balance is #{anthony_balance}"
+puts users.inspect
